@@ -1,3 +1,4 @@
+// search execute to press enter code here 
 document.getElementById('searchData').addEventListener('keyup', ({key}) => {
     if (key === "Enter"){
         loadApiData();
@@ -16,11 +17,13 @@ const loadApiData = () => {
     searchValue = '';
 }
 
+// load data from api 
 const loadApi = (data) => {
     if (data.length != 0) {
-        console.log(data);
+        // slice get array data 
         const displayData = data.data.slice(1, 21);
         const parentDiv = document.getElementById('parentDiv');
+        // loop for deploy array 
         for (const item of displayData) {
             const div = document.createElement('div');
             div.classList.add('col');
@@ -38,21 +41,23 @@ const loadApi = (data) => {
             `;
             parentDiv.appendChild(div);
         }
+
+        // show more data by clicking a button 
         if (data.data.length > 20) {
-            
             const btnDiv = document.createElement('div');
             btnDiv.innerHTML = `<button class="btn btn-primary" onclick="viewAllItems()">View All</button>`;
             parentDiv.appendChild(btnDiv);
         }
         
     } else {
+        // show error message here 
         alert('This data not exist...');
     }
-    
 }
 
-
+// view all data after clicking button 
 const viewAllItems = () => {
+    // fetch api for clicking button 
     const search = document.getElementById('searchData');
     let searchValue = search.value;
     document.getElementById('parentDiv').innerHTML=``;
@@ -61,10 +66,12 @@ const viewAllItems = () => {
     .then(Response => Response.json())
     .then(data => allSearchData(data.data));
 
+    // load all data after clicking button 
     const allSearchData = (data) => {
         console.log(data);
         const parentDiv = document.getElementById('parentDiv');
         parentDiv.innerHTML = ``;
+        // loop for deploy array
         for (const item of data) {
             const div = document.createElement('div');
             div.classList.add('col');
@@ -86,6 +93,7 @@ const viewAllItems = () => {
     }
 }
 
+// load api by clicking item's details button 
 const selectPhone = phoneId => {
     const url = `https://openapi.programming-hero.com/api/phone/${phoneId}`;
     fetch(url)
@@ -93,8 +101,7 @@ const selectPhone = phoneId => {
     .then(data => viewProduct(data.data))
 }
 
-
-
+// load single item data and display  
 const viewProduct = (data) => {
     console.log(data);
     let lunchingDate;
@@ -104,7 +111,8 @@ const viewProduct = (data) => {
         lunchingDate = data.releaseDate;
     }
     const detailsDiv = document.getElementById('detailSection');
-    detailsDiv.innerHTML = `
+    const div = document.createElement('div');
+    div.innerHTML = `
     <div class="card my-3 bg-info" style="max-width: 540px;">
         <div class="row g-0">
             <div class="col-md-4">
@@ -119,7 +127,7 @@ const viewProduct = (data) => {
                     <p class="card-text"><b>Storage: </b>${data.mainFeatures.storage}</p>
                     <p class="card-text"><b>Memory: </b>${data.mainFeatures.memory}</p>
                     <p class="card-text"><b>Sensors :</b> ${data.mainFeatures.sensors.join(', ')}</p>
-                    <h6 class="card-text">Other Information</h6>
+                    <h5 class="card-text">Other Information</h5>
                     <p class="card-text"><b>WLAN: </b>${data.others.WLAN}</p>
                     <p class="card-text"><b>Bluetooth: </b>${data.others.Bluetooth}</p>
                     <p class="card-text"><b>GPS: </b>${data.others.GPS}</p>
@@ -132,6 +140,7 @@ const viewProduct = (data) => {
         </div>
     </div>
     `;
+    detailsDiv.appendChild(div);
 }
 
 
