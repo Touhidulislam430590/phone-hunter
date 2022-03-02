@@ -1,32 +1,84 @@
+document.getElementById('searchData').addEventListener('keyup', ({key}) => {
+    if (key === "Enter"){
+        loadApiData();
+    }});
+
+// fetch api fuction here 
 const loadApiData = () => {
     const search = document.getElementById('searchData');
-    const searchValue = search.value;
+    let searchValue = search.value;
+    document.getElementById('parentDiv').innerHTML = ``;
+    document.getElementById('detailSection').innerHTML = ``;
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchValue}`;
     fetch(url)
     .then(Response => Response.json())
-    .then(data => loadApi(data.data));
+    .then(data => loadApi(data));
+    searchValue = '';
 }
 
 const loadApi = (data) => {
-    
-    const parentDiv = document.getElementById('parentDiv');
-    for (const item of data) {
-        const div = document.createElement('div');
-        div.classList.add('col');
-        div.innerHTML = `
-        <div class="card p-3">
-            <div class="d-flex justify-content-center align-items-center">
-                <img src="${item.image}" class="card-img-top img-fluid product-image">
+    if (data.length != 0) {
+        console.log(data);
+        const displayData = data.data.slice(1, 21);
+        const parentDiv = document.getElementById('parentDiv');
+        for (const item of displayData) {
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
+            <div class="card p-3">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="${item.image}" class="card-img-top img-fluid product-image">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">${item.phone_name}</h5>
+                    <p class="card-text">${item.brand}</p>
+                    <button class="btn btn-primary" onclick="selectPhone('${item.slug}')">View Details</button>
+                </div>
             </div>
-            
-            <div class="card-body">
-                <h5 class="card-title">${item.phone_name}</h5>
-                <p class="card-text">${item.brand}</p>
-                <button class="btn btn-primary" onclick="selectPhone('${item.slug}')">View Details</button>
+            `;
+            parentDiv.appendChild(div);
+        }
+        
+    } else {
+        alert('This data not exist...');
+    }
+    const btnDiv = document.createElement('div');
+    btnDiv.innerHTML = `<button class="btn btn-primary" onclick="viewAllItems()">View All</button>`;
+    parentDiv.appendChild(btnDiv);
+}
+
+
+const viewAllItems = () => {
+    const search = document.getElementById('searchData');
+    let searchValue = search.value;
+    document.getElementById('parentDiv').innerHTML=``;
+    const url = `https://openapi.programming-hero.com/api/phones?search=${searchValue}`;
+    fetch(url)
+    .then(Response => Response.json())
+    .then(data => allSearchData(data.data));
+
+    const allSearchData = (data) => {
+        console.log(data);
+        const parentDiv = document.getElementById('parentDiv');
+        parentDiv.innerHTML = ``;
+        for (const item of data) {
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
+            <div class="card p-3">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="${item.image}" class="card-img-top img-fluid product-image">
+                </div>
+                
+                <div class="card-body">
+                    <h5 class="card-title">${item.phone_name}</h5>
+                    <p class="card-text">${item.brand}</p>
+                    <button class="btn btn-primary" onclick="selectPhone('${item.slug}')">View Details</button>
+                </div>
             </div>
-        </div>
-        `;
-        parentDiv.appendChild(div);
+            `;
+            parentDiv.appendChild(div);
+        }
     }
 }
 
@@ -37,10 +89,7 @@ const selectPhone = phoneId => {
     .then(data => viewProduct(data.data))
 }
 
-const printObject = item => {
-    const features = document.getElementById('features');
-    
-}
+
 
 const viewProduct = (data) => {
     console.log(data);
@@ -52,7 +101,7 @@ const viewProduct = (data) => {
     }
     const detailsDiv = document.getElementById('detailSection');
     detailsDiv.innerHTML = `
-    <div class="card mb-3 bg-info" style="max-width: 540px;">
+    <div class="card my-3 bg-info" style="max-width: 540px;">
         <div class="row g-0">
             <div class="col-md-4">
                 <img src="${data.image}" class="img-fluid rounded-start" alt="...">
@@ -65,8 +114,14 @@ const viewProduct = (data) => {
                     <p class="card-text"><b>ChipSet: </b>${data.mainFeatures.chipSet}</p>
                     <p class="card-text"><b>Storage: </b>${data.mainFeatures.storage}</p>
                     <p class="card-text"><b>Memory: </b>${data.mainFeatures.memory}</p>
-                    
-                    <p id="features" class="card-text"><b>Sensors :</b> ${data.mainFeatures.sensors.join(', ')}</p>
+                    <p class="card-text"><b>Sensors :</b> ${data.mainFeatures.sensors.join(', ')}</p>
+                    <h6 class="card-text">Other Information</h6>
+                    <p class="card-text"><b>WLAN: </b>${data.others.WLAN}</p>
+                    <p class="card-text"><b>Bluetooth: </b>${data.others.Bluetooth}</p>
+                    <p class="card-text"><b>GPS: </b>${data.others.GPS}</p>
+                    <p class="card-text"><b>NFC: </b>${data.others.NFC}</p>
+                    <p class="card-text"><b>Radio: </b>${data.others.Radio}</p>
+                    <p class="card-text"><b>USB: </b>${data.others.USB}</p>
 
                 </div>
             </div>
