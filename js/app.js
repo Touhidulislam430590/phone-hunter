@@ -19,6 +19,13 @@ const loadApiData = () => {
 
 // load data from api 
 const loadApi = (data) => {
+    // error condition 
+    if (data.status == false) {
+        alert('This data not exist...');
+        document.getElementById('parentDiv').innerHTML = `
+            <h3>No data found</h3>
+        `;
+    }
     if (data.length != 0) {
         // slice get array data 
         const displayData = data.data.slice(1, 21);
@@ -48,10 +55,6 @@ const loadApi = (data) => {
             btnDiv.innerHTML = `<button class="btn btn-primary" onclick="viewAllItems()">View All</button>`;
             parentDiv.appendChild(btnDiv);
         }
-        
-    } else {
-        // show error message here 
-        alert('This data not exist...');
     }
 }
 
