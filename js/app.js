@@ -38,13 +38,17 @@ const loadApi = (data) => {
             `;
             parentDiv.appendChild(div);
         }
+        if (data.data.length > 20) {
+            
+            const btnDiv = document.createElement('div');
+            btnDiv.innerHTML = `<button class="btn btn-primary" onclick="viewAllItems()">View All</button>`;
+            parentDiv.appendChild(btnDiv);
+        }
         
     } else {
         alert('This data not exist...');
     }
-    const btnDiv = document.createElement('div');
-    btnDiv.innerHTML = `<button class="btn btn-primary" onclick="viewAllItems()">View All</button>`;
-    parentDiv.appendChild(btnDiv);
+    
 }
 
 
